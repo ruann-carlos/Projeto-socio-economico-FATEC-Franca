@@ -1,0 +1,27 @@
+{
+  "name": "Projeto-socio-economico-FATEC-Franca",
+  "version": "1.0.0",
+  "description": "Projeto Sócio-econômico para disciplina de Sistemas de Informação, visando analisar o perfil sócio econômico dos alunos do 2º semestre de análise e desenvolvimento de sistemas",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ruann-carlos/Projeto-socio-economico-FATEC-Franca.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ruann-carlos/Projeto-socio-economico-FATEC-Franca/issues"
+  },
+  "homepage": "https://github.com/ruann-carlos/Projeto-socio-economico-FATEC-Franca#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
