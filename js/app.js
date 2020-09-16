@@ -1,25 +1,30 @@
 window.onload = () => {
-    init();
+  function ajax(config) {
+    const xhr = new XMLHttpRequest()
+    xhr.open(config.metodo , config.url, true)
+
+    xhr.onload = e => {
+        if (xhr.status === 200) {
+            config.sucesso(xhr.response)
+        } else if (xhr.status >= 400) {
+            config.erro({
+                codigo: xhr.status,
+                text: xhr.statusText
+            })
+        }
+    }
+    xhr.send() 
 }
 
-
-function loadJSON(callback) {   
-
-    var xobj = new XMLHttpRequest();
-        xobj.overrideMimeType("application/json");
-    xobj.open('GET', './result.json', true); // Replace 'my_data' with the path to your file
-    xobj.onreadystatechange = function () {
-          if (xobj.readyState == 4 && xobj.status == "200") {
-            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-            callback(xobj.responseText);
-          }
-    };
-    xobj.send(null);  
- }
- function init() {
-    loadJSON(function(response) {
-     // Parse JSON string into object
-       var actual_JSON = JSON.parse(response);
-       console.log(actual_JSON);
-    });
-   }
+ajax ({
+    url: "dados/result.json",
+    metodo: "get",
+    sucesso(response) {
+        const result = JSON.parse(response)
+        console.log(result)
+    },
+    erro(e) {
+        const msg = document.createTextNode(`${e.codigo}: ${e.text}`)
+    }
+})
+}
