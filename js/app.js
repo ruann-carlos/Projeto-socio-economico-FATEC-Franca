@@ -1,8 +1,25 @@
 
+
+
+function extrairDados(vetor) {
+    let finalObj = {}
+    for (obj of vetor) {
+        for (prop in obj) {
+            if (!finalObj[prop]) {
+                finalObj[prop] = [obj[prop]]
+            } else {
+                finalObj[prop].push(obj[prop])
+            }
+        }
+    }
+    return finalObj
+
+}
 const url = "/dados/result.json"
 fetch(url)
     .then(resp => resp.json())
     .then(dados => {
+<<<<<<< HEAD
         let datas = dados.map(pessoa => pessoa[8]);
         let datasString = getStringAno(datas);
         idades = datasString.map(dataString => getIdadeByString(dataString))
@@ -25,3 +42,10 @@ function getIdadeByString(nascString) {
         return idade - 1
     } else return idade
 }
+=======
+        let datas = dados.map(pessoa => pessoa[8])
+        
+        let dataString = extrairDados2(datas)
+        console.log(dataString)
+    })
+>>>>>>> 5145c9169a4ce38d24a5a112ce8d35bbec4401a1
