@@ -1,6 +1,6 @@
 
 const url = "/dados/result.json"
-fetch(url)
+ fetch(url)
     .then(resp => resp.json())
     .then(dados => {
         labels = labels(dados[0])
@@ -12,10 +12,12 @@ fetch(url)
         idades = datas.map(dataString => getIdadeByString(dataString))
         console.log(idades);
         let categorias = categoria(idades);
-        console.log(categorias);
+        console.log(Object.keys(categorias));
+        let primeiroGrafico = document.getElementById("primeiroGrafico").getContext('3d');
+        makeChart(categorias);
     })
 
-function getIdadeByString(nascString) {
+function getIdadeByString(nascString) {// função para pegar datas  da pergunta de nascimento do json 
     let nascArray = nascString.split("-")
     let [ano, mes] = [Number(nascArray[0]), Number(nascArray[1])]
     let idade = 2020 - ano
@@ -24,7 +26,7 @@ function getIdadeByString(nascString) {
     } else return idade
 }
 
-function labels(dados, inner=false, arr=null) {
+function labels(dados, inner=false, arr=null) {//função para pegar labels do json
     let perguntas = arr || Array()
     for (i in dados) {
         if (typeof dados[i] == "object") {
@@ -41,7 +43,7 @@ function labels(dados, inner=false, arr=null) {
     return perguntas
 }
 
-function padronizacao(dados, inner=false, obj=null) {
+function padronizacao(dados, inner=false, obj=null) {//função do pra padronizar (o?o)
     let perguntas = obj || Object()
     for (i in dados) {
         if (typeof dados[i] == "object") {
@@ -59,7 +61,7 @@ function padronizacao(dados, inner=false, obj=null) {
     return perguntas
 }
 
-function categoria (arr){
+function categoria (arr){//função para classificação da idade em categorias 
     const categorias = {
         "15 a 20": 0,
         "21 a 25": 0,
@@ -86,3 +88,18 @@ function categoria (arr){
     return categorias;
 }
 
+function makeChart(arr){ //função que pega os dados de vetores e objetos para a criação do gráfico
+    let res = Object.values(arr);
+    let chart =  new Chart(primeiroGrafico, {
+        type:'bar',
+
+        data: {
+            labels: ['15-20', '20-25', '25-30', '30-35', '35-40', '40+'],
+            datasets:[{
+                label: ['idade'],
+                data: res,
+                backgroundColor: "#ff2200"
+            }]
+        }
+    });
+}
