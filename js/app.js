@@ -3,20 +3,38 @@ const url = "/dados/result.json"
  fetch(url)
     .then(resp => resp.json())
     .then(dados => {
-        labels = labels(dados[0])
-        dados = dados.map(dado => padronizacao(dado))
-        console.log(labels)
-        console.log(dados)
-        console.log(labels[19])
-        let datas = dados.map(dado => dado[labels[19]])
-        idades = datas.map(dataString => getIdadeByString(dataString))
-        console.log(idades);
-        let categorias = categoria(idades);
-        console.log(Object.keys(categorias));
-        let primeiroGrafico = document.getElementById("primeiroGrafico").getContext('3d');
-        makeChart(categorias);
+        //Colocar os indices e a função que vai cuidade de processar e gerar os graficos
+        let tipos = {
+            32: isDate,
+        }
+        dados = dados.map(dado => dado = padronizacao(dado))
+        let perguntas = labels(dados[0])
+        let resultados = separadorDeDados(perguntas, dados)
+        delegador(perguntas, resultados, tipos)
     })
-
+//Delega as funções que serao aplicadas para cada pergunta
+function delegador(labels, resultados, tipos) {
+    for (indexRes in labels) {
+        if (tipos[indexRes]) {
+            console.log(tipos[indexRes])
+            tipos[indexRes](resultados[labels[indexRes]])
+        }
+    }
+}
+//junta todas as perguntas por perguntas, para que depois possa ser delegado uma função para para arrays de respostas
+function separadorDeDados(indices, dados) {
+    let obj = {}
+    for (respostas of dados) {
+        for (pergunta of indices) {
+            if (!obj[pergunta]) {
+                obj[pergunta] = [respostas[pergunta]]
+            } else {
+                obj[pergunta].push(respostas[pergunta])
+            }
+        }
+    }
+    return obj
+}
 function getIdadeByString(nascString) {// função para pegar datas  da pergunta de nascimento do json 
     let nascArray = nascString.split("-")
     let [ano, mes] = [Number(nascArray[0]), Number(nascArray[1])]
@@ -59,6 +77,11 @@ function padronizacao(dados, inner=false, obj=null) {//função do pra padroniza
 
     }
     return perguntas
+}
+// Lidar com datas
+function isDate(array) {
+    let idades = array.map(dateString => getIdadeByString(dateString))
+    makeChart(categoria(idades))
 }
 
 function categoria (arr){//função para classificação da idade em categorias 
