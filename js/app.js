@@ -5,19 +5,25 @@ const url = "/dados/result.json"
     .then(dados => {
         //Colocar os indices e a função que vai cuidade de processar e gerar os graficos
         let tipos = {
-            32: isDate,
+            19 : isDate,
+            7 : isItens("Sim", "Não"),
+            30: isItens("")
         }
-        dados = dados.map(dado => dado = padronizacao(dado))
         let perguntas = labels(dados[0])
+        dados = dados.map(dado => dado = padronizacao(dado))
         let resultados = separadorDeDados(perguntas, dados)
+        console.log(perguntas)
         delegador(perguntas, resultados, tipos)
     })
 //Delega as funções que serao aplicadas para cada pergunta
 function delegador(labels, resultados, tipos) {
+    let id = 1
     for (indexRes in labels) {
         if (tipos[indexRes]) {
             console.log(tipos[indexRes])
-            tipos[indexRes](resultados[labels[indexRes]])
+            let labelsAndRes = tipos[indexRes](resultados[labels[indexRes]])
+            makeChart(labelsAndRes, id)
+            id += 1
         }
     }
 }
@@ -81,7 +87,25 @@ function padronizacao(dados, inner=false, obj=null) {//função do pra padroniza
 // Lidar com datas
 function isDate(array) {
     let idades = array.map(dateString => getIdadeByString(dateString))
-    makeChart(categoria(idades))
+    return categoria(idades)
+}
+//Lidar com itens
+function isItens(pos, neg) {
+    function inner(array) {
+        let labelAndItens = {}
+        for (let resposta of array) {
+            for (let item in resposta) {
+                //Se o item ainda não foi colocado
+                if (!labelAndItens[item]) {
+                    labelAndItens[item] = (resposta[item] == pos)? 1 : 0
+                } else {
+                    labelAndItens[item] += (resposta[item] == pos)? 1: 0
+                }
+            }
+        }
+        return labelAndItens
+    }
+    return inner
 }
 
 function categoria (arr){//função para classificação da idade em categorias 
@@ -111,13 +135,16 @@ function categoria (arr){//função para classificação da idade em categorias
     return categorias;
 }
 
-function makeChart(arr){ //função que pega os dados de vetores e objetos para a criação do gráfico
+function makeChart(arr, id){ //função que pega os dados de vetores e objetos para a criação do gráfico
     let res = Object.values(arr);
-    let chart =  new Chart(primeiroGrafico, {
+    let canvas = document.createElement("canvas")
+    canvas.id = id
+    document.getElementsByTagName("body")[0].appendChild(canvas)
+    new Chart(String(id), {
         type:'bar',
 
         data: {
-            labels: ['15-20', '20-25', '25-30', '30-35', '35-40', '40+'],
+            labels: [...Object.keys(arr)],
             datasets:[{
                 label: ['idade'],
                 data: res,
