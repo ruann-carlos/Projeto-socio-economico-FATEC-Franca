@@ -13,16 +13,16 @@ const url = "/dados/result.json"
         dados = dados.map(dado => dado = padronizacao(dado))
         let resultados = separadorDeDados(perguntas, dados)
         console.log(perguntas)
-        delegador(perguntas, resultados, tipos)
+        chartController(perguntas, resultados, tipos)
     })
 //Delega as funções que serao aplicadas para cada pergunta
-function delegador(labels, resultados, tipos) {
+function chartController(labels, resultados, tipos) {
     let id = 1
     for (indexRes in labels) {
         if (tipos[indexRes]) {
             console.log(tipos[indexRes])
             let labelsAndRes = tipos[indexRes](resultados[labels[indexRes]])
-            makeChart(labelsAndRes, id)
+            chartTypeController (labelsAndRes, id,labels[indexRes]);
             id += 1
         }
     }
@@ -135,21 +135,54 @@ function categoria (arr){//função para classificação da idade em categorias
     return categorias;
 }
 
-function makeChart(arr, id){ //função que pega os dados de vetores e objetos para a criação do gráfico
+function makeChartBar(arr, id, label){ //função que pega os dados de vetores e objetos para a criação do gráfico de barras
     let res = Object.values(arr);
-    let canvas = document.createElement("canvas")
+    
+    let canvas = document.createElement("canvas")//cria espaço para gráfico
     canvas.id = id
     document.getElementsByTagName("body")[0].appendChild(canvas)
-    new Chart(String(id), {
+    new Chart(String(id), { //cria o gŕafico em si
         type:'bar',
 
         data: {
             labels: [...Object.keys(arr)],
             datasets:[{
-                label: ['idade'],
-                data: res,
-                backgroundColor: "#ff2200"
+                label: [label],//pergunta que será o título do gráfico
+                data: res,//dados para serem montados 
+                backgroundColor: "#ff2200" // cor dos dados no gráfico
             }]
         }
     });
+}
+function makeChartPie(arr, id, label){ //função que pega os dados de vetores e objetos para a criação do gráfico
+    let res = Object.values(arr);
+    
+    let canvas = document.createElement("canvas")
+    canvas.id = id
+    document.getElementsByTagName("body")[0].appendChild(canvas)
+    new Chart(String(id), {
+        type:'pie',
+
+        data: {
+            labels: [...Object.keys(arr)],
+            datasets:[{
+                label: [label],
+                data: res,
+                backgroundColor: "#0000ff"// cor dos dados no gráfico
+            }]
+        }
+    });
+}
+
+function chartTypeController(arr,id,label){
+    let select = document.getElementById("tipos");
+    
+    select.addEventListener("change", function(){
+        let value = select.options[select.selectedIndex].value;
+        if(value == "ba"){
+            makeChartBar(arr,id,label);
+        }else if(value == "pi"){
+            makeChartPie(arr,id,label);
+        }
+    })   
 }
