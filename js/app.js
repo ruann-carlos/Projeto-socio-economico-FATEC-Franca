@@ -1,5 +1,6 @@
 
 const url = "/dados/result.json"
+var registerMyCharts = {}
 fetch(url)
    .then(resp => resp.json())
    .then(dados => {
@@ -7,7 +8,7 @@ fetch(url)
        let tipos = {
            19 : isDate,
            7 : isItens("Sim", "Não"),
-           30: isItens("")
+           30: isItens("Sim", "Não")
        }
        let perguntas = labels(dados[0])
        dados = dados.map(dado => dado = padronizacao(dado))
@@ -178,40 +179,16 @@ function makeChartPie(arr, id, label){ //função que pega os dados de vetores e
 
 function chartTypeController(arr,id,label){
    let select = document.getElementById("tipos");
-   let charts = []
+   
    
    select.addEventListener("change", function(){
-       console.log(charts)
+       console.log(registerMyCharts)
        let value = select.options[select.selectedIndex].value;
+       if (registerMyCharts[id]) registerMyCharts[id].destroy()
        if(value == "ba"){
-           if (!charts[0]) {
-               charts.push(makeChartBar(arr, id, label));
-           } else {
-               Chart.defaults.global.datasets.type = "bar"
-               for (chart of charts) {
-                   charts.options = {
-                       
-                       type: "bar"
-                       
-                       
-                   }
-                   chart.update()
-               }
-           }
-       }else if(value == "pi"){
-           if (!charts[0]) {
-               charts.push(makeChartPie(arr, id, label));
-           } else {
-               Chart.defaults.global.datasets.type = "pie"
-               for (chart of charts) {
-                   charts.options = {
-                       
-                           type: "pie"
-                       
-                   }
-                   chart.update()
-               }
-           }
+            registerMyCharts[id] = (makeChartBar(arr, id, label));
+       } else if (value == "pi"){
+            registerMyCharts[id] = (makeChartPie(arr, id, label));
        }
    })   
 }
