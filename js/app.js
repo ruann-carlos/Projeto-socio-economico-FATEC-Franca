@@ -148,10 +148,16 @@ function makeChartBar(arr, id, label){ //função que pega os dados de vetores e
        data: {
            labels: [...Object.keys(arr)],
            datasets:[{
-               label: [label],//pergunta que será o título do gráfico
+               label: "",//pergunta que será o título do gráfico
                data: res,//dados para serem montados 
                backgroundColor: "#ff2200" // cor dos dados no gráfico
            }]
+       },
+       options:{
+            title:{
+                display: true,
+                text:label
+            }
        }
    });
    return chart
@@ -172,22 +178,28 @@ function makeChartPie(arr, id, label){ //função que pega os dados de vetores e
                data: res,
                backgroundColor: "#0000ff"// cor dos dados no gráfico
            }]
-       }
+       },
+       options:{
+            title:{
+            display: true,
+            text:label
+            }
+        }
    });
    return chart
 }
 
 function chartTypeController(arr,id,label){
    let select = document.getElementById("tipos");
-   
-   
+
    select.addEventListener("change", function(){
-       console.log(registerMyCharts)
-       let value = select.options[select.selectedIndex].value;
-       if (registerMyCharts[id]) registerMyCharts[id].destroy()
-       if(value == "ba"){
+        console.log(registerMyCharts)
+        
+        let value = select.options[select.selectedIndex].value;
+        if (registerMyCharts[id]) registerMyCharts[id].destroy()
+        if(value == "ba"){
             registerMyCharts[id] = (makeChartBar(arr, id, label));
-       } else if (value == "pi"){
+        }else if (value == "pi"){
             registerMyCharts[id] = (makeChartPie(arr, id, label));
        }
    })   
