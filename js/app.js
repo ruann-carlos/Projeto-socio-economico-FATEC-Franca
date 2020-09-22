@@ -7,13 +7,17 @@ fetch(url)
        //Colocar os indices e a função que vai cuidade de processar e gerar os graficos
        let tipos = {
            19 : isDate,
-           7 : isItens("Sim", "Não"),
-           30: isItens("Sim", "Não")
+           7 : isItens,
+           30: isItens,
+           29: isItens,
+           9: isOption,
+           39: isOption
        }
        let perguntas = labels(dados[0])
        dados = dados.map(dado => dado = padronizacao(dado))
        let resultados = separadorDeDados(perguntas, dados)
        console.log(perguntas)
+       console.log(resultados)
        chartController(perguntas, resultados, tipos)
    })
 //Delega as funções que serao aplicadas para cada pergunta
@@ -91,24 +95,55 @@ function isDate(array) {
    return categoria(idades)
 }
 //Lidar com itens
-function isItens(pos, neg) {
-   function inner(array) {
+function isItens(array) {
        let labelAndItens = {}
        for (let resposta of array) {
            for (let item in resposta) {
                //Se o item ainda não foi colocado
                if (!labelAndItens[item]) {
-                   labelAndItens[item] = (resposta[item] == pos)? 1 : 0
+                   if (Number.isNaN(Number(resposta[item]))) {
+                       labelAndItens[item] = (resposta[item] == "Sim")? 1 : 0
+                   } else {
+                        labelAndItens[item] = Number(resposta[item])
+                   }
                } else {
-                   labelAndItens[item] += (resposta[item] == pos)? 1: 0
+                   if (Number.isNaN(Number(resposta[item]))) {
+                    labelAndItens[item] += (resposta[item] == "Sim")? 1: 0
+                   } else {
+                       labelAndItens[item] += Number(resposta[item])
+                   }
+                   
                }
            }
        }
        return labelAndItens
-   }
-   return inner
 }
+function isOption(array) {
+    let labelAndItens = {}
+    for (respostas of array) {
+        for (let resposta of respostas.split(";")) {
+            if (!resposta == "") {
+                if (!labelAndItens[resposta]) {
+                    labelAndItens[resposta] = 1
+                } else {
+                    labelAndItens[resposta] += 1
+                }
+            } else {
+                if (labelAndItens["não respondeu"]) {
+                    labelAndItens["não respondeu"] += 1
+                } else {
+                    labelAndItens["não respondeu"] = 1
+                }
+                    
+            }
+        }
+    }
+    console.log(labelAndItens)
+    return labelAndItens
+}
+function isMult() {
 
+}
 function categoria (arr){//função para classificação da idade em categorias 
    const categorias = {
        "15 a 20": 0,
@@ -209,7 +244,6 @@ function chartTypeController(arr,id,label){
    let select = document.getElementById("tipos");
 
    select.addEventListener("change", function(){
-        console.log(registerMyCharts)
         
         let value = select.options[select.selectedIndex].value;
         if (registerMyCharts[id]) registerMyCharts[id].destroy()
