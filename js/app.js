@@ -150,7 +150,15 @@ function makeChartBar(arr, id, label){ //função que pega os dados de vetores e
            datasets:[{
                label: "",//pergunta que será o título do gráfico
                data: res,//dados para serem montados 
-               backgroundColor: "#ff2200" // cor dos dados no gráfico
+               backgroundColor: [
+                   "#ff2200",
+                   "#0000ff",
+                   "#FF0000",
+                   "#808080",
+                   "#008000",
+                   "#FF4500",
+                   "#A020F0",
+                ] // cor dos dados no gráfico
            }]
        },
        options:{
@@ -176,7 +184,15 @@ function makeChartPie(arr, id, label){ //função que pega os dados de vetores e
            datasets:[{
                label: [label],
                data: res,
-               backgroundColor: "#0000ff"// cor dos dados no gráfico
+               backgroundColor: [
+                   "#0000ff",
+                   "#FF0000",
+                   "#808080",
+                   "#008000",
+                   "#FF4500",
+                   "#A020F0",
+                ]// cor dos dados no gráfico
+               
            }]
        },
        options:{
