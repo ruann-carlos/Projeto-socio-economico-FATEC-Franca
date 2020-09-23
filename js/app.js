@@ -21,7 +21,7 @@ fetch(url)
        chartController(perguntas, resultados, tipos)
    })
 //Delega as funções que serao aplicadas para cada pergunta
-function chartController(labels, resultados, tipos) {
+function chartController(labels, resultados, tipos) {//antigo delegador
    let id = 1
    for (indexRes in labels) {
        if (tipos[indexRes]) {
@@ -46,6 +46,7 @@ function separadorDeDados(indices, dados) {
    }
    return obj
 }
+
 function getIdadeByString(nascString) {// função para pegar datas  da pergunta de nascimento do json 
    let nascArray = nascString.split("-")
    let [ano, mes] = [Number(nascArray[0]), Number(nascArray[1])]
@@ -111,13 +112,13 @@ function isItens(array) {
                     labelAndItens[item] += (resposta[item] == "Sim")? 1: 0
                    } else {
                        labelAndItens[item] += Number(resposta[item])
-                   }
-                   
+                   } 
                }
            }
        }
        return labelAndItens
 }
+
 function isOption(array) {
     let labelAndItens = {}
     for (respostas of array) {
@@ -141,9 +142,11 @@ function isOption(array) {
     console.log(labelAndItens)
     return labelAndItens
 }
+
 function isMult() {
 
 }
+
 function categoria (arr){//função para classificação da idade em categorias 
    const categorias = {
        "15 a 20": 0,
@@ -186,13 +189,7 @@ function makeChartBar(arr, id, label){ //função que pega os dados de vetores e
                label: "",//pergunta que será o título do gráfico
                data: res,//dados para serem montados 
                backgroundColor: [
-                   "#ff2200",
-                   "#0000ff",
-                   "#FF0000",
-                   "#808080",
-                   "#008000",
-                   "#FF4500",
-                   "#A020F0",
+                   colorGenerator(Object.keys(arr))
                 ] // cor dos dados no gráfico
            }]
        },
@@ -205,9 +202,9 @@ function makeChartBar(arr, id, label){ //função que pega os dados de vetores e
    });
    return chart
 }
+
 function makeChartPie(arr, id, label){ //função que pega os dados de vetores e objetos para a criação do gráfico
    let res = Object.values(arr);
-   
    let canvas = document.createElement("canvas")
    canvas.id = id
    document.getElementsByTagName("body")[0].appendChild(canvas)
@@ -219,14 +216,9 @@ function makeChartPie(arr, id, label){ //função que pega os dados de vetores e
            datasets:[{
                label: [label],
                data: res,
-               backgroundColor: [
-                   "#0000ff",
-                   "#FF0000",
-                   "#808080",
-                   "#008000",
-                   "#FF4500",
-                   "#A020F0",
-                ]// cor dos dados no gráfico
+               backgroundColor:colorGenerator(Object.values(arr))
+
+                // cor dos dados no gráfico
                
            }]
        },
@@ -253,4 +245,19 @@ function chartTypeController(arr,id,label){
             registerMyCharts[id] = (makeChartPie(arr, id, label));
        }
    })   
+}
+
+function colorGenerator(arr){
+    let hexadecimais = "0123456789ABCDEF";
+    let arraycolor = [];
+    for(let i= 0; i < arr.length; i++){
+        let cor = '#';
+        // Pega um número aleatório no array acima
+        for (let j = 0; j < 6; j++ ) {
+        //E concatena à variável cor
+            cor += hexadecimais[Math.floor(Math.random() * 8)];
+        }
+        arraycolor.push(cor);
+    }   
+    return arraycolor;
 }
