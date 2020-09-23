@@ -188,9 +188,7 @@ function makeChartBar(arr, id, label){ //função que pega os dados de vetores e
            datasets:[{
                label: "",//pergunta que será o título do gráfico
                data: res,//dados para serem montados 
-               backgroundColor: [
-                   colorGenerator(Object.keys(arr))
-                ] // cor dos dados no gráfico
+               backgroundColor: colorGenerator(Object.values(arr))// cor dos dados no gráfico
            }]
        },
        options:{
