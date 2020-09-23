@@ -18,19 +18,16 @@ fetch(url)
        let resultados = separadorDeDados(perguntas, dados)
        console.log(perguntas)
        console.log(resultados)
-       chartController(perguntas, resultados, tipos)
+       questionController(perguntas, resultados, tipos);
    })
 //Delega as funções que serao aplicadas para cada pergunta
-function chartController(labels, resultados, tipos) {//antigo delegador
-   let id = 1
-   for (indexRes in labels) {
-       if (tipos[indexRes]) {
-           console.log(tipos[indexRes])
-           let labelsAndRes = tipos[indexRes](resultados[labels[indexRes]])
-           chartTypeController (labelsAndRes, id,labels[indexRes]);
-           id += 1
-       }
-   }
+function chartController(labels, resultados, tipos,tipo) {//antigo delegador
+   let id = 1 
+    if (tipos[tipo]) {//se o tipo escolhido pelo usuário estiver definido dentro das funções tipo então ele entrará na condição
+        let labelsAndRes = tipos[tipo](resultados[labels[tipo]]); //Pega as perguntas e respostas do indice escolhido pelo usuário
+        chartTypeController (labelsAndRes, id,labels[tipo]);//chama a função de controle do tipo de gráfico
+         id += 1
+    }   
 }
 //junta todas as perguntas por perguntas, para que depois possa ser delegado uma função para para arrays de respostas
 function separadorDeDados(indices, dados) {
@@ -116,7 +113,7 @@ function isItens(array) {
                }
            }
        }
-       return labelAndItens
+    return labelAndItens
 }
 
 function isOption(array) {
@@ -141,10 +138,6 @@ function isOption(array) {
     }
     console.log(labelAndItens)
     return labelAndItens
-}
-
-function isMult() {
-
 }
 
 function categoria (arr){//função para classificação da idade em categorias 
@@ -186,7 +179,7 @@ function makeChartBar(arr, id, label){ //função que pega os dados de vetores e
        data: {
            labels: [...Object.keys(arr)],
            datasets:[{
-               label: "",//pergunta que será o título do gráfico
+               label: [label],//pergunta que será o título do gráfico
                data: res,//dados para serem montados 
                backgroundColor: colorGenerator(Object.values(arr))// cor dos dados no gráfico
            }]
@@ -230,24 +223,33 @@ function makeChartPie(arr, id, label){ //função que pega os dados de vetores e
    return chart
 }
 
-function chartTypeController(arr,id,label){
+function chartTypeController(arr,id,label){//Controla o tipo do gráfico, ouvindo as atualizações da escoha o usuário no html
    let select = document.getElementById("tipos");
 
-   select.addEventListener("change", function(){
+   select.addEventListener("change", function(){//escuta mudanças
         
-        let value = select.options[select.selectedIndex].value;
-        if (registerMyCharts[id]) registerMyCharts[id].destroy()
+        let value = select.options[select.selectedIndex].value;//obtem a opção escolhida pelo usuário
+        if (registerMyCharts[id]) registerMyCharts[id].destroy()//Destrói possíveis gráficos anteriores
         if(value == "ba"){
-            registerMyCharts[id] = (makeChartBar(arr, id, label));
+            registerMyCharts[id] = (makeChartBar(arr, id, label)); //faz gráfico de barras
         }else if (value == "pi"){
-            registerMyCharts[id] = (makeChartPie(arr, id, label));
+            registerMyCharts[id] = (makeChartPie(arr, id, label));//faz gráfico de pizza
        }
    })   
 }
 
-function colorGenerator(arr){
-    let hexadecimais = "0123456789ABCDEF";
-    let arraycolor = [];
+function questionController(labels, resultados, tipos){//controla a atualização da seleção da pergunta pelo usuário
+    let questions = document.getElementById("resposta");//obtem o elemento do select
+
+    questions.addEventListener("change", function(){//eventListener para escutar as atualizações
+        let question = Number(questions.options[questions.selectedIndex].value);//obtém valor selecionado
+        chartController(labels, resultados, tipos,question);// com o valor da opção obtida, chama a função de controle de gráficos, passando o valor da opção como um dos parâmetros
+    })
+}
+
+function colorGenerator(arr){//gera cores hexadecimais aleatóriamente
+    let hexadecimais = "0123456789ABCDEF";//valores hexadecimais
+    let arraycolor = [];//array de cores
     for(let i= 0; i < arr.length; i++){
         let cor = '#';
         // Pega um número aleatório no array acima
