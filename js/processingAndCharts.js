@@ -149,7 +149,14 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
              title:{
                  display: true,
                  text:label
-             }
+             },
+             scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
         }
     });
     return chart
