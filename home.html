@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Json and csv</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="./js/processingJson.js"></script>
+    <script src="./js/processingCsv.js"></script>
+    <script src="./js/processingAndCharts.js"></script>
+</head>
+<body>
+    <input type="file" id="fileInput">
+    <button onclick="inputData()">Inserir dados</button>
+    <h1>Teste</h1>
+    <h2>As cores são geradas automaticamente, cores parecidas não tem intenção de confundir</h2>
+    <select id="resposta" required="required">
+        <option name="select" value="" selected="" disabled="">Selecione uma opção</option>
+        <option value="19">idade</option>
+        <option value="7">Onde utiliza Computadores</option>
+        <option value="9">Horário de trabalho</option>
+        <option value="29">Quantos itens no domicílio</option>
+        <option value="30">No seu domicílio tem</option>
+        <option value="39">Entretenimento</option>
+    </select>
+
+
+
+    <select id="tipos" required="required">
+        <option name="select" value="" selected="" disabled="">Selecione uma opção</option>
+        <option value="pi">Pizza</option>
+        <option value="ba">Barras</option>
+    </select>
+
+    <div id="charts">
+    <canvas id="primeiroGrafico"></canvas>
+    </div>
+</body>
+</html>
+<script>
+    let tipos = {}
+    a = []
+    var registerMyCharts = {}
+    async function inputData() {
+        let fileText
+        let fileData = document.getElementById("fileInput")
+        let file = fileData.files[0]
+        if (file.name.endsWith(".csv")) {
+            console.log("csv")
+            fileText = await file.text()
+            let rowsArray = fileText.split("\n")
+            let perguntas = rowsArray.shift()
+            let respostasRow = rowsArray
+            perguntas = limpar(perguntas)
+            let respostasArray = respostasRow.map(respostas => limpar(respostas))
+            respostasArray = perguntasRepostas(perguntas, respostasArray)
+            perguntas = retirarOptions(perguntas)
+            let resultados = separadorDeDados(perguntas, respostasArray)
+            a.push(perguntas)
+            a.push(resultados)
+            questionController(perguntas, resultados)
+        } else if (file.name.endsWith(".json")){
+            /*
+            let tipos = {
+                19 : isDate,
+                7 : isItens,
+                30: isItens,
+                29: isItens,
+                9: isOption,
+                39: isOption
+            }*/
+            //Preprocessing JSon
+            console.log("json")
+            fileText = await file.text()
+            let dados = await JSON.parse(fileText)
+            let perguntas = labels(dados[0])
+            let respostas = dados.map(dado => dado = padronizacao(dado))
+            //ProcessingAndCharts
+            console.log(perguntas, respostas)
+            let resultados = separadorDeDados(perguntas, respostas)
+            questionController(perguntas, resultados);
+
+        }
+    }
+</script>
