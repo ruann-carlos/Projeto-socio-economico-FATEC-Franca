@@ -8,15 +8,21 @@ function chooseType(resultados) { //Função para chamar as funções de cada ti
     }, 0) > 7) return isDate
     let options = {}
     let repiticoes = 0
-    for (let respota of resultados) {
-        if (respota.length > 80) return false
-        if (!options[respota]) {
-            options[respota] = 1
-        } else {
-            repiticoes += 1
-            if (repiticoes > 15) return isOption
+    let diferentes = 0
+    for (let resultado of resultados) {
+        for (let resposta of resultado.split(";")) {
+
+            if (resposta.length > 80) return false
+            if (!options[resposta]) {
+                options[resposta] = 1
+                diferentes += 1
+            } else {
+                repiticoes += 1
+                
+            }
         }
     }
+    if (repiticoes > diferentes) return isOption
     return false
 }
 //Delega as funções que serao aplicadas para cada pergunta
