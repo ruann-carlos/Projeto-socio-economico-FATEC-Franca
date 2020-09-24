@@ -1,5 +1,5 @@
-var semGraficos = []
-function chooseType(resultados) {
+var semGraficos = []//Array de itens que não é possível gerar gráficos
+function chooseType(resultados) { //Função para chamar as funções de cada tipo de pergunta
     if (typeof resultados[0] == "object") return isItens
     if (resultados.slice(0, 10).reduce((validos, resposta) => {
         if (resposta.search(/^\d\d\d\d-\d\d-\d\d$/) != -1) {
@@ -18,7 +18,6 @@ function chooseType(resultados) {
         }
     }
     return false
-    console.log(label, resultados)
 }
 //Delega as funções que serao aplicadas para cada pergunta
 function chartController(labels, resultados, tipos, tipo) {//antigo delegador
@@ -43,7 +42,7 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
     }
     return obj
  }
- function getIdadeByString(nascString) {// função para pegar datas  da pergunta de nascimento do json 
+ function getIdadeByString(nascString) {// função para pegar datas  da pergunta de nascimento do arquivo de dados 
     let nascArray = nascString.split("-")
     let [ano, mes] = [Number(nascArray[0]), Number(nascArray[1])]
     let idade = 2020 - ano
@@ -52,12 +51,12 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
     } else return idade
  }
  // Lidar com datas
- function isDate(array) {
+ function isDate(array) {//função para lidar com as datas e obter as idades, para depois categoriza-las
     let idades = array.map(dateString => getIdadeByString(dateString))
     return categoria(idades)
  }
  //Lidar com itens
- function isItens(array) {
+ function isItens(array) {//função para definição das respostas que são de sim ou não
         let labelAndItens = {}
         for (let resposta of array) {
             for (let item in resposta) {
@@ -79,7 +78,7 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
         }
      return labelAndItens
  }
- function isOption(array) {
+ function isOption(array) {//função para definição das respostas que sejam de opção
      let labelAndItens = {}
      for (respostas of array) {
          for (let resposta of respostas.split(";")) {
@@ -156,10 +155,10 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
  }
  function makeChartPie(arr, id, label){ //função que pega os dados de vetores e objetos para a criação do gráfico
     let res = Object.values(arr);
-    let canvas = document.createElement("canvas")
+    let canvas = document.createElement("canvas");
     canvas.id = id
     document.getElementsByTagName("body")[0].appendChild(canvas)
-    let chart = new Chart(String(id), {
+    let chart = new Chart(String(id),{
         type:'pie',
  
         data: {
@@ -167,16 +166,13 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
             datasets:[{
                 label: [label],
                 data: res,
-                backgroundColor:colorGenerator(Object.values(arr))
- 
-                 // cor dos dados no gráfico
-                
+                backgroundColor:colorGenerator(Object.values(arr)) // gera cores para o gráfico  
             }]
         },
         options:{
              title:{
-             display: true,
-             text:label
+                display: true,
+                text:label
              }
          }
     });
@@ -187,7 +183,6 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
     let select = document.getElementById("tipos");
  
     select.addEventListener("change", function(){//escuta mudanças
-         
          let value = select.options[select.selectedIndex].value;//obtem a opção escolhida pelo usuário
          if (registerMyCharts[id]) registerMyCharts[id].destroy()//Destrói possíveis gráficos anteriores
          if(value == "ba"){
@@ -199,17 +194,17 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
  }
  function questionController(labels, resultados){//controla a atualização da seleção da pergunta pelo usuário
     let questions = document.getElementById("resposta");//obtem o elemento do select
-    questions.innerHTML = '<option name="select" value="" selected="" disabled="">Selecione uma opção</option>'
-    for (let index in labels) {
-        let choose = chooseType(resultados[labels[index]])
-        if (choose) {
+    questions.innerHTML = '<option name="select" value="" selected="" disabled="">Selecione uma opção</option>'//Monta a opção para o usuário selecionar, de acordo com o arquivo csv
+    for (let index in labels) { //para cada índice do array de perguntas
+        let choose = chooseType(resultados[labels[index]])//verifica o tipo da resposta, se é sim ou não, multipla escolha, etc
+        if (choose) {//os resultados das perguntas se encaixem nos tipos definido adiciona a resposta ao array de respostas para ser gerado o gráfico
             let op = document.createElement("option")
             op.setAttribute("value", index)
             op.innerHTML = labels[index]
             questions.appendChild(op)
             tipos[index] = choose
         } else {
-            semGraficos.push(resultados[labels[index]])
+            semGraficos.push(resultados[labels[index]]) //se não adiciona o item ao array de perguntas sem gráficos
         }
     }
     questions.addEventListener("change", function(){//eventListener para escutar as atualizações
@@ -227,7 +222,8 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
          //E concatena à variável cor
              cor += hexadecimais[Math.floor(Math.random() * 8)];
          }
-         arraycolor.push(cor);
-     }   
-     return arraycolor;
+         arraycolor.push(cor);//adiciona a cor ao array de cores
+     }
+     console.log(arraycolor);
+     return arraycolor; //retorna o array de cores
  }
