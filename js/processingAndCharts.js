@@ -135,17 +135,15 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
  }
  function makeChartBar(arr, id, label){ //função que pega os dados de vetores e objetos para a criação do gráfico de barras
     let res = Object.values(arr);
-    
     let canvas = document.createElement("canvas")//cria espaço para gráfico
     canvas.id = id
-    document.getElementsByTagName("body")[0].appendChild(canvas)
+    document.getElementsByClassName("chartsView")[0].appendChild(canvas)
     let chart = new Chart(String(id), { //cria o gŕafico em si
         type:'bar',
  
         data: {
             labels: [...Object.keys(arr)],
-            datasets:[{
-                label: [label],//pergunta que será o título do gráfico
+            datasets:[{ 
                 data: res,//dados para serem montados 
                 backgroundColor: colorGenerator(Object.values(arr))// cor dos dados no gráfico
             }]
@@ -161,6 +159,9 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
                         beginAtZero: true
                     }
                 }]
+            },
+            legend:{
+                display:false //não exibir labels nos gráficos de barra
             }
         }
     });
@@ -170,7 +171,7 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
     let res = Object.values(arr);
     let canvas = document.createElement("canvas");
     canvas.id = id
-    document.getElementsByTagName("body")[0].appendChild(canvas)
+    document.getElementsByClassName("chartsView")[0].appendChild(canvas)
     let chart = new Chart(String(id),{
         type:'pie',
  

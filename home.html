@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Json and csv</title>
+    <title>Projeto Sócio Econômico-Fatec Franca</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
     <script src="./js/processingJson.js"></script>
     <script src="./js/processingCsv.js"></script>
     <script src="./js/processingAndCharts.js"></script>
+    <link rel="stylesheet" href="./style/home.css" class="">
 </head>
 <body>
     <input type="file" id="fileInput">
@@ -23,9 +24,7 @@
         <option value="ba">Barras</option>
     </select>
 
-    <div name="chart"id="charts" style="position: relative; height: 40vh; width: 80vw">
-        <canvas id="primeiroGrafico" height="80vh" width="80vw"></canvas>
-    </div>
+    <div class="chartsView" name="chart"></div>
 </body>
 </html>
 <script>
