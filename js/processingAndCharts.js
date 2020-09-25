@@ -221,12 +221,23 @@ function questionController(labels, resultados){//controla a atualização da se
         } else {
             semGraficos[labels[index]] = resultados[labels[index]]; //se não adiciona o item ao array de perguntas sem gráficos 
         }
-        for(let pergunta in semGraficos){
-            let div = document.createElement("div");
-            div.innerHTML = `${semGraficos}`
-            console.log(pergunta);
-            document.getElementById("noCharts").appendChild(div)
+    }
+    for(let pergunta in semGraficos){
+        let div = document.createElement("div");
+        let classDiv = div.classList
+        classDiv.add("perguntas")
+        div.innerHTML = `<h2>${pergunta}</h2>`
+        divRespostas = document.createElement("div")
+        divRespostas.setAttribute("class", "respostas")
+        div.appendChild(divRespostas)
+        for (resposta of semGraficos[pergunta]) {
+            let p = document.createElement("p")
+            p.innerHTML = resposta
+            p.setAttribute("class", "resposta")
+            divRespostas.appendChild(p)
         }
+        console.log(pergunta);
+        document.getElementById("noCharts").appendChild(div)
     }
     questions.addEventListener("change", function(){//eventListener para escutar as atualizações
         let question = Number(questions.options[questions.selectedIndex].value);//obtém valor selecionado
