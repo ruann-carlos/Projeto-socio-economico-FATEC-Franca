@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Json and csv</title>
+    <title>Projeto Sócio Econômico-Fatec Franca</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
     <script src="./js/processingJson.js"></script>
     <script src="./js/processingCsv.js"></script>
     <script src="./js/processingAndCharts.js"></script>
+    <link rel="stylesheet" href="./style/home.css" class="">
+    <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <input type="file" id="fileInput">
@@ -15,15 +17,7 @@
     <h2>As cores são geradas automaticamente, cores parecidas não tem intenção de confundir</h2>
     <select id="resposta" required="required">
         <option name="select" value="" selected="" disabled="">Selecione uma opção</option>
-        <option value="19">idade</option>
-        <option value="7">Onde utiliza Computadores</option>
-        <option value="9">Horário de trabalho</option>
-        <option value="29">Quantos itens no domicílio</option>
-        <option value="30">No seu domicílio tem</option>
-        <option value="39">Entretenimento</option>
     </select>
-
-
 
     <select id="tipos" required="required">
         <option name="select" value="" selected="" disabled="">Selecione uma opção</option>
@@ -31,9 +25,9 @@
         <option value="ba">Barras</option>
     </select>
 
-    <div id="charts">
-    <canvas id="primeiroGrafico"></canvas>
-    </div>
+    <div class="chartsView" name="chart"></div><!--Div onde ficam os gráficos-->
+
+    <div class="noCharts" id="noCharts"></div>
 </body>
 </html>
 <script>

@@ -1,0 +1,17 @@
+.chartsView{
+    width: 500px;
+    height: 600px;
+    padding: 2hv;
+}
+div.perguntas {
+    display: inline-block;
+    width: 100%;
+
+}
+.respostas {
+    height: 200px;
+    overflow: hidden;
+    overflow-wrap: normal;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
