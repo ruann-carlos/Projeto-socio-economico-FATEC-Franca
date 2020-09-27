@@ -50,6 +50,9 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
 }
 function getIdadeByString(nascString) {// função para pegar datas  da pergunta de nascimento do arquivo de dados 
     let nascArray = nascString.split("-")
+    if (nascArray.length != 3) {
+        return -1
+    }
     let [ano, mes] = [Number(nascArray[0]), Number(nascArray[1])]
     let idade = 2020 - ano
     if (mes < 9) {
