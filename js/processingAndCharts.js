@@ -33,9 +33,9 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
          chartTypeController (labelsAndRes, id, labels[tipo]);//chama a função de controle do tipo de gráfico
           id += 1
      }   
- }
+}
  //junta todas as perguntas por perguntas, para que depois possa ser delegado uma função para para arrays de respostas
- function separadorDeDados(indices, dados) {
+function separadorDeDados(indices, dados) {
     let obj = {}
     for (respostas of dados) {
         for (pergunta of indices) {
@@ -50,19 +50,22 @@ function chartController(labels, resultados, tipos, tipo) {//antigo delegador
 }
 function getIdadeByString(nascString) {// função para pegar datas  da pergunta de nascimento do arquivo de dados 
     let nascArray = nascString.split("-")
+    if (nascArray.length != 3) {
+        return -1
+    }
     let [ano, mes] = [Number(nascArray[0]), Number(nascArray[1])]
     let idade = 2020 - ano
     if (mes < 9) {
         return idade - 1
     } else return idade
- }
+}
  // Lidar com datas
- function isDate(array) {//função para lidar com as datas e obter as idades, para depois categoriza-las
+function isDate(array) {//função para lidar com as datas e obter as idades, para depois categoriza-las
     let idades = array.map(dateString => getIdadeByString(dateString))
     return categoria(idades)
- }
+}
  //Lidar com itens
- function isItens(array) {//função para definição das respostas que são de sim ou não
+function isItens(array) {//função para definição das respostas que são de sim ou não
         let labelAndItens = {}
         for (let resposta of array) {
             for (let item in resposta) {
@@ -257,6 +260,5 @@ function questionController(labels, resultados){//controla a atualização da se
          }
          arraycolor.push(cor);//adiciona a cor ao array de cores
      }
-     console.log(arraycolor);
      return arraycolor; //retorna o array de cores
  }
